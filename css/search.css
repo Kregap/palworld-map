@@ -1,0 +1,25 @@
+.search-result {
+  width: 100%;
+}
+
+.search-img {
+  max-width: 65px;
+  padding: 2px;
+  height: auto;
+  -webkit-filter: drop-shadow(2px 2px 2px #aaa);
+  filter: drop-shadow(2px 2px 2px #aaa);
+}
+
+.result-text {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+#search-results {
+  width: 100%;
+}
+
+#search-results-list {
+  max-height: calc(100vh - 120px);
+}

@@ -1,0 +1,24 @@
+.leaflet-control-language {
+  width: 34px;
+  padding: 0px 2px;
+  text-align: center;
+}
+
+.leaflet-control-language-icon {
+  width: 20px;
+  transition: width .5s;
+  line-height: 0px;
+}
+
+.leaflet-control-language-icon.selected {
+  width: 30px;
+  filter: saturate(1);
+}
+
+.leaflet-control-language-icon:not(.selected) {
+  filter: saturate(.6);
+}
+
+.leaflet-control-language-icon:not(.selected):hover {
+  width: 30px;
+}
