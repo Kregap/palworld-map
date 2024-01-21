@@ -83,7 +83,7 @@ map.setMaxBounds([maxBounds])
 
 const attributionControl =  L.control.attribution()
 attributionControl.addAttribution('<a href="https://github.com/Kregap/palworld-map">Code</a>')
-attributionControl.addAttribution('<a href="https://docs.google.com/spreadsheets/d/1m_MW0M2kCiKJtVJ6anJQOqbHOILGh10Q6TtNCQK_KCw">Markers</a>')
+attributionControl.addAttribution('<a href="https://docs.google.com/spreadsheets/d/1HnYSXPmpRV1z2elyFpqFv1VU4VEmLhPA4KjdJB1cBVY">Markers</a>')
 attributionControl.addTo(map)
 
 let defaultCategoryName = 'Default'
