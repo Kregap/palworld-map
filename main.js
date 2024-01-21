@@ -57,14 +57,14 @@ const map = L.map('map', {
   crs: L.CRS.Craftopia,
   zoomSnap: 0.25,
   zoomDelta: 0.25,
-  minZoom: -2,
-  maxZoom: -0.4,
+  minZoom: 0,
+  maxZoom: 2.0,
   attributionControl: false
 });
 
-const mapImageSize = [4096, 3584]
-const mapPxOrigin = [1794, 2304]  // game world [0, 0] point (map origin) in map image pixel coordinates
-const scale = 2.0045  // map pixel bounds to map unit scale
+const mapImageSize = [8192, 8192]
+const mapPxOrigin = [4096, 4096]  // game world [0, 0] point (map origin) in map image pixel coordinates
+const scale = 0.245  // map pixel bounds to map unit scale
 
 const mapOrigin = [
   mapPxOrigin[0],
@@ -74,7 +74,7 @@ const bounds = [
   [scale * -mapOrigin[0], scale * -mapOrigin[1]],
   [scale * (mapImageSize[0] - mapOrigin[0]), scale * (mapImageSize[1] - mapOrigin[1])]
 ]
-L.imageOverlay('images/maps/Map - Blank.webp', bounds).addTo(map);
+L.imageOverlay('images/maps/Map - Blank.jpg', bounds).addTo(map);
 map.fitBounds(bounds);
 
 const maxBoundsOffset = 0.3
@@ -82,7 +82,7 @@ const maxBounds = L.latLngBounds(bounds).pad(maxBoundsOffset)
 map.setMaxBounds([maxBounds])
 
 const attributionControl =  L.control.attribution()
-attributionControl.addAttribution('<a href="https://github.com/Kregap/craftopia-map">Code</a>')
+attributionControl.addAttribution('<a href="https://github.com/Kregap/palworld-map">Code</a>')
 attributionControl.addAttribution('<a href="https://docs.google.com/spreadsheets/d/1m_MW0M2kCiKJtVJ6anJQOqbHOILGh10Q6TtNCQK_KCw">Markers</a>')
 attributionControl.addTo(map)
 
