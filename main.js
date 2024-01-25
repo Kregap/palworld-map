@@ -17,6 +17,8 @@ escape:"esc",plus:"+",mod:/Mac|iPod|iPhone|iPad/.test(navigator.platform)?"meta"
 this._directMap={};return this};d.prototype.stopCallback=function(a,b){if(-1<(" "+b.className+" ").indexOf(" mousetrap ")||D(b,this.target))return!1;if("composedPath"in a&&"function"===typeof a.composedPath){var c=a.composedPath()[0];c!==a.target&&(b=c)}return"INPUT"==b.tagName||"SELECT"==b.tagName||"TEXTAREA"==b.tagName||b.isContentEditable};d.prototype.handleKey=function(){return this._handleKey.apply(this,arguments)};d.addKeycodes=function(a){for(var b in a)a.hasOwnProperty(b)&&(n[b]=a[b]);p=null};
 d.init=function(){var a=d(u),b;for(b in a)"_"!==b.charAt(0)&&(d[b]=function(b){return function(){return a[b].apply(a,arguments)}}(b))};d.init();q.Mousetrap=d;"undefined"!==typeof module&&module.exports&&(module.exports=d);"function"===typeof define&&define.amd&&define(function(){return d})}})("undefined"!==typeof window?window:null,"undefined"!==typeof window?document:null);
 
+const debugMode = false
+
 let selectedLanguage = languageModule.getSelected()
 languageModule.setLanguage(selectedLanguage)
 
@@ -30,9 +32,14 @@ L.Projection.Craftopia = L.extend({}, L.Projection.LonLat, {
 	},
 })
 
+const x_multiplier = 1.0
+const y_multiplier = -1.0
+const origin_x_offset = 0
+const origin_y_offset = 0
+
 L.CRS.Craftopia = L.extend({}, L.CRS.Simple, {
   projection: L.Projection.Craftopia,
-  transformation: new L.Transformation(1, 0, -1, 0),
+  transformation: new L.Transformation(x_multiplier, origin_x_offset, y_multiplier, origin_y_offset),
   
   // Scale, zoom and distance are entirely unchanged from CRS.Simple
   scale: function(zoom) {
@@ -55,16 +62,14 @@ L.CRS.Craftopia = L.extend({}, L.CRS.Simple, {
 
 const map = L.map('map', {
   crs: L.CRS.Craftopia,
-  zoomSnap: 0.25,
-  zoomDelta: 0.25,
-  minZoom: 0,
-  maxZoom: 2.0,
+  zoom: 0,
+  maxZoom: 2,
   attributionControl: false
 });
 
 const mapImageSize = [8192, 8192]
 const mapPxOrigin = [4096, 4096]  // game world [0, 0] point (map origin) in map image pixel coordinates
-const scale = 0.245  // map pixel bounds to map unit scale
+const scale = 0.25  // map pixel bounds to map unit scale
 
 const mapOrigin = [
   mapPxOrigin[0],
@@ -74,12 +79,58 @@ const bounds = [
   [scale * -mapOrigin[0], scale * -mapOrigin[1]],
   [scale * (mapImageSize[0] - mapOrigin[0]), scale * (mapImageSize[1] - mapOrigin[1])]
 ]
-L.imageOverlay('images/maps/Map - Blank.jpg', bounds).addTo(map);
 map.fitBounds(bounds);
+
+L.GridLayer.Palworld = L.GridLayer.extend({
+  createTile: function (coords) {
+    const zoom_multipliers = [1, 2, 4, 8]
+    const column_count = 8 * zoom_multipliers[coords.z]
+    const row_count = 8 * zoom_multipliers[coords.z]
+    const h_offset = -4 * zoom_multipliers[coords.z]
+    const v_offset = -4 * zoom_multipliers[coords.z]
+    var tile = document.createElement('img')
+    if ((coords.x >= 0 + h_offset && coords.x < column_count + h_offset) 
+        && (coords.y >= 0 + v_offset && coords.y < row_count + v_offset)) {
+      tile.src = `images/maps/tiles/zoom_${coords.z}/tile-${coords.y - v_offset}_${coords.x - h_offset}.png`
+    } else {
+      return document.createElement('div')
+    }
+
+    return tile
+  },
+})
+
+L.gridLayer.palworld = function(opts) {
+  return new L.GridLayer.Palworld(opts)
+}
+
+map.addLayer(L.gridLayer.palworld({
+  maxZoom: 2
+}))
+
+L.GridLayer.DebugCoords = L.GridLayer.extend({
+  createTile: function (coords) {
+      var tile = document.createElement('div');
+      tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
+      tile.style.outline = '1px solid red';
+      return tile;
+  }
+});
+
+L.gridLayer.debugCoords = function(opts) {
+  return new L.GridLayer.DebugCoords(opts);
+};
+
+if (debugMode) {
+  map.addLayer( L.gridLayer.debugCoords() );
+}
 
 const maxBoundsOffset = 0.3
 const maxBounds = L.latLngBounds(bounds).pad(maxBoundsOffset)
 map.setMaxBounds([maxBounds])
+
+const game_start_center = [240.5, -518.8]
+map.setView(game_start_center, 2, {animate: false})
 
 const attributionControl =  L.control.attribution()
 attributionControl.addAttribution('<a href="https://github.com/Kregap/palworld-map">Code</a>')
