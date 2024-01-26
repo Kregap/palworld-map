@@ -3,11 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
+  
+  <!-- Metadata -->
   <meta name="description" content="Palworld interactive map with everything!">
   <meta name="keywords" content="HTML, CSS, JavaScript">
   <meta name="author" content="Kregap">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Opengraph and twitter metadata for links -->
   <meta property="og:title" content="Palworld Map">
   <meta property="og:description" content="Palworld interactive map with everything!">
   <meta property="og:type" content="website">
@@ -23,59 +26,46 @@
   <meta name="twitter:image:src" content="https://i.ibb.co/7JP9y3x/palworld-open-graph-image.jpg">
   <meta name="theme-color" content="#102639">
 
-  <title>Palworld Map</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <title>Craftopia Map</title>
   <link rel="icon" type="image/x-icon" href="images/favicon.png">
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T1SYSK5ZWW"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    const spreadsheetID = '1HnYSXPmpRV1z2elyFpqFv1VU4VEmLhPA4KjdJB1cBVY'
+    const attribution = [
+      `<a href="https://docs.google.com/spreadsheets/d/${spreadsheetID}">Markers</a>`,
+      '<a href="https://github.com/Kregap/palworld-map">Map</a>'
+    ]
 
-    gtag('config', 'G-T1SYSK5ZWW');
+    // Map configuration
+    // Pixel to coordinate point scale
+    const x_multiplier = 1.0
+    const y_multiplier = -1.0
+    
+    // Column and row configuration for state without zoom (zoom 0)
+    const column_count = 8
+    const row_count = 8
+    // chunk 0, 0 offset
+    const h_offset = -4
+    const v_offset = -4
+    // map [0, 0] coordinates offset from  uper-left corner of chunk 0, 0
+    const origin_x_offset = 0
+    const origin_y_offset = 0
+
+    const map_start_point_coordinates = [240.5, -518.8]
+    const map_start_point_zoom = 2
+    
+    $(function () {
+      $("#includedContent").load("game-map-core/index.html");
+    });
   </script>
-
-  <!-- Lodash -->
-  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-
-  <!-- Leaflet - map plugin -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
-    </script>
-
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
-    </script>
-
-  <!-- My files -->
-  <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link rel="stylesheet" type="text/css" href="css/markers.css">
-  <link rel="stylesheet" type="text/css" href="css/search.css">
-  <link rel="stylesheet" type="text/css" href="css/language.css">
-  <link rel="stylesheet" type="text/css" href="css/credits.css">
-  <link rel="stylesheet" type="text/css" href="css/coordinates.css">
 </head>
 
 <body>
-  <div id="map"></div>
-  <div id="top-bar" class="floating">
-    <div id="search-container">
-      <input class="form-control mousetrap" id="marker-search-input" type="text" placeholder="Search for markers"
-        aria-label="marker search input" autofocus>
-      <a href="#" id="reset-hint">Esc to reset</a>
-      <div class="list-group floating" id="search-results">
-        <div id="search-results-list" class="overflow-y-auto"></div>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="main.js"></script>
+  <div id="includedContent"></div>
 </body>
 
 </html>

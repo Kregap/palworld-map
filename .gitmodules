@@ -1,0 +1,3 @@
+[submodule "game-map-core"]
+	path = game-map-core
+	url = https://github.com/Kregap/game-map-core.git
